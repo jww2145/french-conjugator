@@ -15,6 +15,18 @@ def getConjugations(inf, form ,tense):
 
 @app.route('/hello', methods=['POST'])
 
+def create(word, tenses):
+	TABLES = {}
+	TABLES['word'] = (
+		"CREATE TABLE infinitive ("
+		"   id varchar(10) PRIMARY KEY"
+		"   infinitive varchar(99) NOT NULL"
+	)
+	for i in tenses:
+		if (tenses[i] != None):
+			(
+				"ALTER TABLE infinitive ADD COLUMN tenses[i] varchar(99) NOT NULL"
+			)
 
 def postHello():
 	return 'This is a POST request!'

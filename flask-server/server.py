@@ -61,7 +61,7 @@ mycursor = mydb.cursor()
 
 mycursor.execute("""CREATE TABLE words (
 		id int NOT NULL AUTO_INCREMENT,
-		indicatif varchar(99),
+		infinitif varchar(99),
 		indicatif_present varchar(99),
 		indicatif_passeSimple varchar(99),
 		indicatif_imparfait varchar(99),

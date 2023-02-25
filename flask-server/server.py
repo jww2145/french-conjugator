@@ -1,4 +1,5 @@
 # IMPORT
+import mysql.connector
 from flask import Flask
 from flask_cors import CORS
 # APP SETUP
@@ -10,11 +11,13 @@ CORS(app)
 def getHello():
 	return 'This is a GET request!'
 @app.route('/hello', methods=['POST'])
+
+
+
+
+
 def postHello():
 	return 'This is a POST request!'
-@app.route('/hello', methods=['PUT'])
-def putHello():
-	return 'This is a PUT request!'
 @app.route('/hello', methods=['DELETE'])
 def deleteHello():
 	return 'This is a DELETE request!'

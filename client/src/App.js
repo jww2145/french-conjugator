@@ -1,23 +1,40 @@
 import logo from './logo.svg';
+import React, { useState, useEffect } from 'react'
 import './App.css';
+import WordCard from './Components/WordCard.js'
 
 function App() {
+
+  const [wordList, setWordList] = useState([])
+  const [cards, setCards] = useState(1)
+  const [word,setWord]= useState('')
+
+  function makeNewCard(){
+    setCards(cards+1)
+  }
+
+  const flashcards = [];
+  for (let i = 0; i < cards; i++) {
+    flashcards.push(
+      <WordCard word={word} setWord={setWord} wordList = {wordList} setWordList = {setWordList} cards = {cards} setCards = {setCards}/>
+    );
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="Home">
+
+      <h1> French Conjugator </h1>
+
+      <div id="homeBox">
+        <div id="wordDisplay">
+          {flashcards}
+          <button onClick={() => makeNewCard()}>New Word</button>
+        </div>
+
+        <div id="tenseDisplay">
+          Test
+        </div>
+      </div>
     </div>
   );
 }

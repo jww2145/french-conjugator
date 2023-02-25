@@ -13,6 +13,45 @@
   }
 }
 
+#wordCard{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-content: center;
+  align-items: center;
+  outline: #282c34 1px solid;
+  padding: 1.5%;
+  margin: top 50px;
+}
+
+#editor{
+  float: left;
+}
+
+#icon{
+  float: right;
+}
+
+#wordDisplay{
+  float: left;
+  width: 40%;
+  padding:2%; 
+  background-color: #61dafb;
+}
+
+#tenseDisplay{
+  float: right;
+  width: 40%;
+  padding: 2%;
+  background-color: #282c34;
+}
+#homebox{
+  display:flex;
+  background-color: aliceblue;
+  justify-content: space-between;
+
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

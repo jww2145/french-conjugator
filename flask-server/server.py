@@ -24,7 +24,7 @@ def parseConjugations(inf, form, tense):
 	return string
 
 
-@app.route('/hello', methods=['POST'])
+@app.route('/update', methods=['POST'])
 def update(word):
 	mydb = mysql.connector.connect(
 		host="localhost",
@@ -34,29 +34,37 @@ def update(word):
 		auth_plugin='mysql_native_password'
 	)
 	mycursor = mydb.cursor()
-	value2 = word
-	value3 = parseConjugations(word,"indicatif","present")
-	value4 = parseConjugations(word, "indicatif", "passeSimple")
-	value5 = parseConjugations(word, "indicatif", "imparfait")
-	value6 = parseConjugations(word, "indicatif", "passeCompose")
-	value7 = parseConjugations(word, "indicatif", "futurSimple")
-	value8 = parseConjugations(word, "indicatif", "passeAnterieur")
-	value9 = parseConjugations(word, "indicatif", "plusQueParfait")
-	value10 = parseConjugations(word, "indicatif", "futurAnterieur")
-	value11 = parseConjugations(word, "subjonctif", "present")
-	value12 = parseConjugations(word, "subjonctif", "passe")
-	value13 = parseConjugations(word, "subjonctif", "imparfait")
-	value14 = parseConjugations(word, "subjonctif", "plusQueParfait")
-	value15 = parseConjugations(word, "conditionnel", "present")
-	value16 = parseConjugations(word, "conditionnel", "passe1reForme")
-	value17 = parseConjugations(word, "conditionnel", "passe2eForme")
- 
-	print("Brian is dumb")
+	test = "SELECT COUNT(*) FROM words WHERE indicitif=" + word
+	mycursor.execute(test)
+
+	if mycursor.rowcount != 0:
+		value2 = word
+		value3 = parseConjugations(word,"indicatif","present")
+		value4 = parseConjugations(word, "indicatif", "passeSimple")
+		value5 = parseConjugations(word, "indicatif", "imparfait")
+		value6 = parseConjugations(word, "indicatif", "passeCompose")
+		value7 = parseConjugations(word, "indicatif", "futurSimple")
+		value8 = parseConjugations(word, "indicatif", "passeAnterieur")
+		value9 = parseConjugations(word, "indicatif", "plusQueParfait")
+		value10 = parseConjugations(word, "indicatif", "futurAnterieur")
+		value11 = parseConjugations(word, "subjonctif", "present")
+		value12 = parseConjugations(word, "subjonctif", "passe")
+		value13 = parseConjugations(word, "subjonctif", "imparfait")
+		value14 = parseConjugations(word, "subjonctif", "plusQueParfait")
+		value15 = parseConjugations(word, "conditionnel", "present")
+		value16 = parseConjugations(word, "conditionnel", "passe1reForme")
+		value17 = parseConjugations(word, "conditionnel", "passe2eForme")
+	
 
 
-	command = "INSERT INTO words" \
-			  "VALUES (" + value2 + ", " + value3 + ", " + value4 + ", " + value5 + ", " + value6 + ", " + value7 + ", " + value8 + ", " + value9 + ", " + value10 + ", " + value11 + ", " + value12 + ", " + value13 + ", " + value14 + ", " + value15 + ", " + value16 + ", " + value17
-	mycursor.execute(command)
+		command = "INSERT INTO words" \
+				"VALUES (" + value2 + ", " + value3 + ", " + value4 + ", " + value5 + ", " + value6 + ", " + value7 + ", " + value8 + ", " + value9 + ", " + value10 + ", " + value11 + ", " + value12 + ", " + value13 + ", " + value14 + ", " + value15 + ", " + value16 + ", " + value17
+		
+		newcursor = mydb.cursor()
+		newcursor.execute(command)
+	
+	else:
+		pass
 	
 	
 	

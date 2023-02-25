@@ -22,7 +22,7 @@ def parseConjugations(inf, form, tense):
 		string = string + ", " + list[i]
 	string = string[:-2]
 	return string
-    
+
 
 @app.route('/hello', methods=['POST'])
 def update(word):
@@ -51,9 +51,9 @@ def update(word):
 	value16 = parseConjugations(word, conditionnel, passe1reForme)
 	value17 = parseConjugations(word, conditionnel, passe2eForme)
 
-	
+
 	command = "INSERT INTO words" \
-			  "VALUES (" + value2 + ", " + value3 + ", " + value4 + ", " + value5 + ", " + value6 + ", " + value7 + ", " + value8 + ", " + value9 + ", " + value10 + ", " + value11 + ", " + value12 + ", " + value13 + ", " + value14 + ", " + value15 + ", " + value16 + ", " + value17"" 
+			  "VALUES (" + value2 + ", " + value3 + ", " + value4 + ", " + value5 + ", " + value6 + ", " + value7 + ", " + value8 + ", " + value9 + ", " + value10 + ", " + value11 + ", " + value12 + ", " + value13 + ", " + value14 + ", " + value15 + ", " + value16 + ", " + value17""
 	mycursor.execute(command)
 	
 	

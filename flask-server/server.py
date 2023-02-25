@@ -2,14 +2,17 @@
 import mysql.connector
 from flask import Flask
 from flask_cors import CORS
+from french_guh import finder
 # APP SETUP
 app = Flask(__name__)
 # enable resource sharing between frontend and server
 CORS(app)
+
 # ROUTES
-@app.route('/hello', methods=['GET'])
-def getHello():
-	return 'This is a GET request!'
+@app.route('/read', methods=['GET'])
+def getConjugations(inf, form ,tense):
+	return finder(inf, form ,tense)
+
 @app.route('/hello', methods=['POST'])
 
 
@@ -18,8 +21,15 @@ def getHello():
 
 def postHello():
 	return 'This is a POST request!'
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 25ec9b48f0c7a73a0a98a14575a49a57c4588218
 @app.route('/hello', methods=['DELETE'])
 def deleteHello():
 	return 'This is a DELETE request!'
+
+
 if __name__ == "__main__":
     app.run(debug=True)

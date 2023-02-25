@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 
-function App() {
+function App() {val 
   return (
     <div className="home-page">
       <h1>Enter motivational quote here to get conjugatin!</h1>

@@ -16,16 +16,8 @@ def getConjugations(inf, form ,tense):
 @app.route('/hello', methods=['POST'])
 
 
-
-
-
 def postHello():
 	return 'This is a POST request!'
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 25ec9b48f0c7a73a0a98a14575a49a57c4588218
 @app.route('/hello', methods=['DELETE'])
 def deleteHello():
 	return 'This is a DELETE request!'

@@ -1,29 +1,18 @@
 import requests
 import json
+import mysql.connector
+from config import headers
 
-url = "https://french-conjugaison.p.rapidapi.com/conjugate/"
+url = "https://french-conjugaison.p.rapidapi.com/conjugate/aller"
 
-headers = {
-	"X-RapidAPI-Key": "a9be7e9630mshd95fe02fce700e0p16bd39jsn9aa9310c5148",
-	"X-RapidAPI-Host": "french-conjugaison.p.rapidapi.com"
-}
+response = requests.request("GET", url, headers=headers)
+text = response.text
+jsonText = (json.loads(text))["data"]
 
-# participe = jsonText["participe"]
-# indicatif = jsonText["indicatif"]
-# subjonctif = jsonText["subjonctif"]
-# conditionnel = jsonText["conditionnel"]
-# imperatif = jsonText["imperatif"]
-
-def finder(inf, form ,tense):
-	url = "https://french-conjugaison.p.rapidapi.com/conjugate/" + inf
-	response = requests.request("GET", url, headers=headers)
-	text = response.text
-	jsonText = (json.loads(text))["data"]
-	out = jsonText[form][tense]
-
-	return out
+infinitive = jsonText["infinitive"]
+participe = jsonText["participe"]
 
 
 
-#print(finder("aller", "indicatif", "present"))
+print(infinitive, participe)
 

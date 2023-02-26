@@ -1,108 +1,138 @@
 # IMPORT
 import mysql.connector
-import requests
-from flask import Flask
+from flask import Flask,request,jsonify
 from flask_cors import CORS
-from french_guh import finder
-from config import my_user, my_pass, my_db
-from temp import createdb
+import requests
+import json
+from config import password
+from config import headers
 # APP SETUP
 app = Flask(__name__)
 # enable resource sharing between frontend and server
 CORS(app)
 
-# ROUTES
-@app.route('/read', methods=['GET'])
-def getConjugations(inf, form ,tense):
-	return finder(inf, form ,tense)
+mydb = mysql.connector.connect(
+	host="localhost",
+	user = "root",
+ 	password = password,
+  	database = "hackathon2023"
+)
 
-def parseConjugations(inf, form, tense):
-	out = getConjugations(inf, form, tense)
+mycursor = mydb.cursor()
+
+def parseConjugations(out):
 	list = out.values()
-	string = ""
-	for i in list:
-		string = string + ", " + list[i]
-	string = string[:-2]
-	return string
+ 
+	string = ''
+	for value in list:
+		string = string + ", " + value
+  
+	return string[2:]
 
+def finder(inf, conjugation_Array):
+    url = "https://french-conjugaison.p.rapidapi.com/conjugate/" + inf
+    response = requests.request("GET", url, headers=headers)
+    text = response.text
+    jsonText = (json.loads(text))["data"]
+    for tense in jsonText["indicatif"]:
+        conjugation_Array.insert(0,parseConjugations(jsonText["indicatif"][tense]))
+    for tense2 in jsonText["subjonctif"]:
+        conjugation_Array.insert(0,parseConjugations(jsonText["subjonctif"][tense2]))
+    for tense3 in jsonText["conditionnel"]:
+        conjugation_Array.insert(0,parseConjugations(jsonText["conditionnel"][tense3]))
+    return(conjugation_Array)
+
+# ROUTES
+@app.route('/test/')
+def hello_word():
+    name = request.args.get('name')
+    return 'Hello, {}!'.format(name)
+
+
+@app.route('/delete/<int:id>', methods=["DELETE"])
+def delete(id):
+    delete_query = "DELETE FROM words WHERE id = %s;"
+    
+    mycursor.execute(delete_query, (id,))
+    mydb.commit()
+    return "Deleted successfully"
+    
+
+@app.route('/word/<int:id>/<column_name>', methods=["GET"])
+def get_row(id,column_name):
+    query = ("SELECT {col_name} FROM words WHERE id = %s").format(col_name = column_name)
+    mycursor.execute(query, (id,))
+    results = mycursor.fetchone()
+    mycursor.close
+    return jsonify(results)
+    
 
 @app.route('/update', methods=['POST'])
 def update():
-	word = request.args.get('word')
-	mydb = mysql.connector.connect(
-		host="localhost",
-		user=my_user,
-		password=my_pass,
-		database=my_db,
-		auth_plugin='mysql_native_password'
+    data = request.get_json()
+    word = data.get('word')
+    conjugation_Array = []
+    finder(word, conjugation_Array)
+    value2 = word
+    value3 = conjugation_Array.pop()
+    value4 = conjugation_Array.pop()
+    value5 = conjugation_Array.pop()
+    value6 = conjugation_Array.pop()
+    value7 = conjugation_Array.pop()
+    value8 = conjugation_Array.pop()
+    value9 = conjugation_Array.pop()
+    value10 = conjugation_Array.pop()
+    value11 = conjugation_Array.pop()
+    value12 = conjugation_Array.pop()
+    value13 = conjugation_Array.pop()
+    value14 = conjugation_Array.pop()
+    value15 = conjugation_Array.pop()
+    value16 = conjugation_Array.pop()
+    value17 = conjugation_Array.pop()
+
+    sql = (
+        "INSERT INTO words (infinitif, indicatif_present, indicatif_passeSimple, indicatif_imparfait,indicatif_passeCompose,indicatif_futurSimple,"
+    	"indicatif_passeAnterieur, indicatif_plusQueParfait, indicatif_futurAnterieur, subjonctif_present, subjonctif_passe,"
+    	"subjonctif_imparfait, subjonctif_plusQueParfait, conditionnel_present, conditionnel_passe1reForme, conditionnel_passe2eForme) VALUES"
+		"(%s, %s, %s, %s, %s , %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 	)
-	mycursor = mydb.cursor()
-	value2 = word
-	value3 = parseConjugations(word,"indicatif","present")
-	value4 = parseConjugations(word, "indicatif", "passeSimple")
-	value5 = parseConjugations(word, "indicatif", "imparfait")
-	value6 = parseConjugations(word, "indicatif", "passeCompose")
-	value7 = parseConjugations(word, "indicatif", "futurSimple")
-	value8 = parseConjugations(word, "indicatif", "passeAnterieur")
-	value9 = parseConjugations(word, "indicatif", "plusQueParfait")
-	value10 = parseConjugations(word, "indicatif", "futurAnterieur")
-	value11 = parseConjugations(word, "subjonctif", "present")
-	value12 = parseConjugations(word, "subjonctif", "passe")
-	value13 = parseConjugations(word, "subjonctif", "imparfait")
-	value14 = parseConjugations(word, "subjonctif", "plusQueParfait")
-	value15 = parseConjugations(word, "conditionnel", "present")
-	value16 = parseConjugations(word, "conditionnel", "passe1reForme")
-	value17 = parseConjugations(word, "conditionnel", "passe2eForme")
- 
-	dumb = "brian you're so dumb"	
-
-
-	command = "INSERT INTO words" \
-			  "VALUES (" + value2 + ", " + value3 + ", " + value4 + ", " + value5 + ", " + value6 + ", " + value7 + ", " + value8 + ", " + value9 + ", " + value10 + ", " + value11 + ", " + value12 + ", " + value13 + ", " + value14 + ", " + value15 + ", " + value16 + ", " + value17 
-	mycursor.execute(command)
+    data = (value2, value3, value4, value5, value6, value7, value8, value9, value10, value11, value12, value13, value14, value15, value16, value17)
+    mycursor.execute(sql,data)
+    mydb.commit()
+    return json.dumps({'word': word, 'infinitif': value2, 'indicatif_present': value3, 'indicatif_passeSimple': value4, 
+                    'indicatif_imparfait': value5, 'indicatif_passeCompose': value6, 'indicatif_futurSimple': value7, 
+                    'indicatif_passeAnterieur': value8, 'indicatif_plusQueParfait': value9, 'indicatif_futurAnterieur': value10,
+                    'subjonctif_present': value11, 'subjonctif_passe': value12, 'subjonctif_imparfait': value13,
+                    'subjonctifplusQueParfait':value14, 'conditionnel_present': value15, 'conditionnel_passe1reForme': value16,
+                    'conditionnel_passe2reForme': value17})
 	
-@app.route('/create', methods=['CREATE'])	
-def create(word):
-	return createdb()
-
-
-def postHello():
-	return 'This is a POST request!'
-@app.route('/hello', methods=['DELETE'])
-def deleteHello():
-	return 'This is a DELETE request!'
-
-
-
-# mydb = mysql.connector.connect(
-#   host="localhost",
-#   user=my_user,
-#   password=my_pass,
-#   database=my_db,
-#   auth_plugin='mysql_native_password'
-# )
-
-# mycursor = mydb.cursor()
-
-# mycursor.execute("""CREATE TABLE words (
-# 		id int NOT NULL AUTO_INCREMENT,
-# 		infinitif varchar(99),
-# 		indicatif_present varchar(99),
-# 		indicatif_passeSimple varchar(99),
-# 		indicatif_imparfait varchar(99),
-# 		indicatif_passeCompose varchar(99),
-# 		indicatif_futurSimple varchar(99),
-# 		indicatif_passeAnterieur varchar(99),
-# 		indicatif_plusQueParfait varchar(99),
-# 		indicatif_futurAnterieur varchar (99),
-# 		subjonctif_present varchar(99),
-# 		subjonctif_passe varchar(99),
-# 		subjonctif_imparfait varchar(99),
-# 		subjonctif_plusQueParfait varchar(99),
-# 		conditionnel_present varchar(99),
-# 		conditionnel_passe1reForme varchar(99),
-# 		conditionnel_passe2eForme varchar(99),
-# 		PRIMARY KEY (id))""")
+@app.route('/create')	
+def create():
+    sql = (
+        """CREATE TABLE words (
+		id int NOT NULL AUTO_INCREMENT,
+		infinitif varchar(600),
+		indicatif_present varchar(600),
+		indicatif_passeSimple varchar(600),
+		indicatif_imparfait varchar(600),
+		indicatif_passeCompose varchar(600),
+		indicatif_futurSimple varchar(600),
+		indicatif_passeAnterieur varchar(600),
+		indicatif_plusQueParfait varchar(600),
+		indicatif_futurAnterieur varchar (600),
+		subjonctif_present varchar(600),
+		subjonctif_passe varchar(600),
+		subjonctif_imparfait varchar(600),
+		subjonctif_plusQueParfait varchar(600),
+		conditionnel_present varchar(600),
+		conditionnel_passe1reForme varchar(600),
+		conditionnel_passe2eForme varchar(600),
+		PRIMARY KEY (id))"""
+    )
+    mycursor.execute(sql)
+    mydb.commit()
+    return jsonify({'message': 'Table has been created successfuly'}), 200
+    
 
 
 if __name__ == "__main__":

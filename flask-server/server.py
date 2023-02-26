@@ -1,9 +1,11 @@
 # IMPORT
 import mysql.connector
+import requests
 from flask import Flask
 from flask_cors import CORS
 from french_guh import finder
 from config import my_user, my_pass, my_db
+from temp import createdb
 # APP SETUP
 app = Flask(__name__)
 # enable resource sharing between frontend and server
@@ -25,7 +27,8 @@ def parseConjugations(inf, form, tense):
 
 
 @app.route('/update', methods=['POST'])
-def update(word):
+def update():
+	word = request.args.get('word')
 	mydb = mysql.connector.connect(
 		host="localhost",
 		user=my_user,
@@ -58,30 +61,9 @@ def update(word):
 			  "VALUES (" + value2 + ", " + value3 + ", " + value4 + ", " + value5 + ", " + value6 + ", " + value7 + ", " + value8 + ", " + value9 + ", " + value10 + ", " + value11 + ", " + value12 + ", " + value13 + ", " + value14 + ", " + value15 + ", " + value16 + ", " + value17 
 	mycursor.execute(command)
 	
-	
+@app.route('/create', methods=['CREATE'])	
 def create(word):
-	TABLES = {}
-	TABLES['words'] = (
-		"CREATE TABLE words ("
-		"   id int NOT NULL AUTO_INCREMENT"
-		"   infinitif varchar(99)"
-		"	indicatif_present varchar(99)"
-		"   indicatif_passeSimple varchar(99)"
-		"	indicatif_imparfait varchar(99)"
-		"	indicatif_passeCompose varchar(99)"
-		"	indicatif_futurSimple varchar(99)"
-		"   indicatif_passeAnterieur varchar(99)"
-		"   indicatif_plusQueParfait varchar(99)"
-		"   indicatif_futurAnterieur varchar (99)"
-		"   subjonctif_present varchar(99)"
-		"   subjonctif_passe varchar(99)"
-		"   subjonctif_imparfait varchar(99)"
-		"   subjonctif_plusQueParfait varchar(99)"
-		"   conditionnel_present varchar(99)"
-		"   conditionnel_passe1reForme varchar(99)"
-		"   conditionnel_passe2eForme varchar(99)"
-		"   PRIMARY KEY (id)"
-	)
+	return createdb()
 
 
 def postHello():

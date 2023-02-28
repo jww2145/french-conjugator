@@ -6,15 +6,17 @@ function ConjugatingScreen({wordList, tenses}){
     const[quiz,setQuiz]=useState("")
     const[quizzedInfinitif,setQuizzedInfinitif] = useState("")
     const [correct, setCorrect] = useState(false)
+
+
+    console.log(quiz)
     
-    const randomIndex = Math.floor(Math.random() * wordList.length);
+    let randomIndex = Math.floor(Math.random() * wordList.length);
+    if(randomIndex == 0){
+        randomIndex = 1
+    }
     const randomIndex2 = Math.floor(Math.random() * tenses.length)
     const randomTense = tenses[randomIndex2]
     let randomRandomIndex = 0
-
-    if(correct == true){
-        setCorrect(false)
-    }
 
     useEffect(() => {
         fetch(`http://127.0.0.1:5000/word/${randomIndex}/${randomTense}`)

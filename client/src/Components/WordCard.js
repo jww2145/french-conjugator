@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
+import Spacer from './Spacer';
 import '../App.css';
 
 
@@ -43,6 +44,7 @@ function WordCard({wordList, setWordList, cards, setCards}){
                     <EditorContent editor={editor} />
                 </div>
             </div>
+            <Spacer/>
         </div>
     )
 }

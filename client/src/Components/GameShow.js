@@ -68,10 +68,12 @@ function GameShow({infinitif, tense, correct, setCorrect, quiz}){
     return(
         <div id="gameshow-box">
             <h1>{infinitif} in {displayTense}</h1>
-            <div id = "subject">
-                <h1>{subject}</h1>
+            <div id="question-box">
+                <div id = "subject">
+                    <h1>{subject}</h1>
+                </div>
+                <EditorContent editor={editor} />
             </div>
-            <EditorContent editor={editor} />
         </div>
     )
 }

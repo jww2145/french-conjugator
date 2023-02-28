@@ -35,6 +35,10 @@
   margin: top 50px;
 }
 
+.home{
+  height: 600px;
+}
+
 #editor{
   float: left;
 }
@@ -47,6 +51,11 @@
   float: left;
   width: 45%;
   padding:2%; 
+}
+
+#conjugateButton{
+  margin:auto;
+  padding:5%;
 }
 
 #tenseDisplay{
@@ -75,6 +84,20 @@
 
 .App-link {
   color: #61dafb;
+}
+
+#gameshow-box{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#question-box{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: baseline;
 }
 
 @keyframes App-logo-spin {

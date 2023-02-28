@@ -4,6 +4,7 @@ import './App.css';
 import WordCard from './Components/WordCard.js'
 import TenseLibrary from './Components/TenseLibrary';
 import ConjugatingScreen from './Components/ConjugatingScreen'
+import Spacer from './Components/Spacer';
 
 function App() {
   const [cards, setCards] = useState(1)

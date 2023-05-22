@@ -2,54 +2,52 @@ import React, {useState, useEffect} from "react";
 import GameShow from "./GameShow";
 
 function ConjugatingScreen({wordList, tenses}){
+    //Fetch all of the words and the tenses required and put it in an array? Shuffle this array and pass it to Game Show
 
-    const[quiz,setQuiz]=useState("")
-    const[quizzedInfinitif,setQuizzedInfinitif] = useState("")
-    const [correct, setCorrect] = useState(false)
+    const urls = [] 
+    let quiz_array = []
+    const[isReady,setIsReady] = useState(false)
 
 
-    console.log(quiz)
+    for (let i = 0; i < wordList.length; i++){
+        for (let j = 0; j < tenses.length; j++){
+            quiz_array.push([tenses[j]])
+            urls.push(`http://127.0.0.1:5000/word/${wordList[i]}/${tenses[j]}`)
+        }
+    }
+
+    generateQuiz(urls)
+
+    let counter = 0
+    function generateQuiz(){
+        if(urls.length === 0){
+            setIsReady(true)
+            return Promise.resolve()
+        }
+        const url = urls.shift()
+
+        return fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            quiz_array[counter].push(data[0])
+            quiz_array[counter].push(data[1])
+            counter += 1
+            return generateQuiz(urls)})
+        .catch(error => {
+            console.error('Error:', error);
+    });
+    }
     
-    let randomIndex = Math.floor(Math.random() * wordList.length);
-    if(randomIndex == 0){
-        randomIndex = 1
-    }
-    const randomIndex2 = Math.floor(Math.random() * tenses.length)
-    const randomTense = tenses[randomIndex2]
-    let randomRandomIndex = 0
-
-    useEffect(() => {
-        fetch(`http://127.0.0.1:5000/word/${randomIndex}/${randomTense}`)
-          .then(response => response.json())
-          .then(data => generateQuestion(data))
-          .catch(error => console.error(error));
-      }, []);
-
-      useEffect(() => {
-        fetch(`http://127.0.0.1:5000/word/${randomIndex}/infinitif`)
-          .then(response => response.json())
-          .then(data => generateInfinitive(data))
-          .catch(error => console.error(error));
-      }, []);
-
-    function generateQuestion(data){
-        let conjugations = JSON.stringify(data)
-        let new_conjugation = conjugations.slice(1,-1).replace(/["]+/g, '')
-        let conjugation_array = new_conjugation.split(",")
-        randomRandomIndex = Math.floor(Math.random() * conjugation_array.length)
-        setQuiz(conjugation_array[randomRandomIndex])
-        console.log(quiz)
-    }
-
-    function generateInfinitive(data){
-        let infinitive = JSON.stringify(data)
-        let new_infinitive = infinitive.slice(1,-1).replace(/['"]+/g, '')
-        setQuizzedInfinitif(new_infinitive)
-    }
+    console.log(quiz_array)
 
     return(
         <div>
-            <GameShow infinitif={quizzedInfinitif} tense = {randomTense} correct = {correct} setCorrect = {setCorrect} quiz={quiz}/>
+           {isReady ? <GameShow quiz = {quiz_array}/> : <p> Waiting . . . </p>}
         </div>
     )
 }

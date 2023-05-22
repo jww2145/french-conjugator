@@ -13,14 +13,12 @@ function Checkform({ array, label, tense, setTenses}){
     function handleAdd(){
         array.push(tense)
         setTenses(array)
-        console.log(array)
     }
 
     function handleRemove(){
         const index = array.indexOf(tense)
         array.splice(index,1)
         setTenses(array)
-        console.log(array)
     }
     return (
       <div className="checkbox-wrapper">

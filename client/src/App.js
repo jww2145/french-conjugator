@@ -3,19 +3,16 @@ import React, { useState, useEffect } from 'react'
 import './App.css';
 import WordCard from './Components/WordCard.js'
 import TenseLibrary from './Components/TenseLibrary';
-import ConjugatingScreen from './Components/ConjugatingScreen'
-import Spacer from './Components/Spacer';
+import Waiting from './Components/Waiting';
 
 function App() {
   const [cards, setCards] = useState(1)
   const [wordList, setWordList] = useState([])
-  const [data, setData] = useState('');
-  console.log(data)
   //tense states
-
   const[tenses,setTenses] = useState([])
   const[conjugatin, setConjugatin] = useState(false)
   
+
   function makeNewCard(){
     setCards(cards+1)
   }
@@ -29,43 +26,11 @@ function App() {
   }
 
 
-  function makeBodies(){
-    const bodies = []
-    for(let i = 0; i < wordList.length; i++){
-      bodies.push({body: {word: wordList[i]}})
-    }
-
-    conjugate(bodies)
-      .then(() => console.log('All post requests have been made.'))
-      .then(() => setConjugatin(true))
+  function makeTable(){
+    fetch('http://127.0.0.1:5000/create')
+    .then(() => setConjugatin(true))
   }
 
-  function conjugate(bodies){
-    if (bodies.length === 0) {
-      return Promise.resolve();
-    }
-
-    const body = bodies.shift(); // Get the next body
-    console.log(body.body)
-    
-    return fetch('http://127.0.0.1:5000/update', {
-      method: 'POST',
-      body: JSON.stringify(body.body),
-      headers: {
-        'Content-Type': 'application/json' 
-      }
-    })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      // Make the next request in the chain
-      return conjugate(bodies);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-  }
 
 
   return (
@@ -73,7 +38,7 @@ function App() {
 
       <h1> French Conjugator </h1>
 
-      {!conjugatin?<div id="homeBox">
+      {!conjugatin ?<div id="homeBox">
         <div id="wordDisplay">
           {flashcards}
           <button onClick={() => makeNewCard()}>New Word</button>
@@ -84,12 +49,11 @@ function App() {
         </div>
 
       <div id = "conjugateButton">
-        <button onClick={makeBodies}>Conjugate!</button>
+        <button onClick={makeTable}>Conjugate!</button>
       </div>
       </div>:
-      <ConjugatingScreen wordList={wordList} tenses = {tenses}/>}
+      <Waiting wordList={wordList} tenses = {tenses}/>}
     </div>
   );
 }
-
 export default App;

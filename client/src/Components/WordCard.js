@@ -14,7 +14,6 @@ function WordCard({wordList, setWordList, cards, setCards}){
             setCards(cards+1)
           }
         }
-        
     
         document.addEventListener('keydown', handleTab);
     
@@ -30,7 +29,6 @@ function WordCard({wordList, setWordList, cards, setCards}){
         onBlur({ editor }){
           newList.push(editor.getText())
           setWordList(newList)
-          console.log(newList)
         },
 
         content: 'Insert Word',

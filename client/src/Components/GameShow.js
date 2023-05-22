@@ -1,9 +1,18 @@
-import React from "react";
+import React, {useState} from "react";
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
 
-function GameShow({infinitif, tense, correct, setCorrect, quiz}){
+function GameShow({quiz}){
+    const [correct,setCorrect] = useState(false)
+
+    let randomTense = Math.floor(Math.random() * quiz.length)
+    let randomSubject = Math.floor(Math.random() * 6)
+    let quizzed_tense = quiz[randomTense][0]
+    let quizzed_infinitif = quiz[randomTense][1]
+    let quizzed_question = quiz[randomTense][2].split(",")[randomSubject]
+
+    console.log(quizzed_infinitif + " " + quizzed_tense + " " + quizzed_question)
 
     var dict = {
         indicatif_present: "Present  (Indicatif)",
@@ -23,13 +32,14 @@ function GameShow({infinitif, tense, correct, setCorrect, quiz}){
 		conditionnel_passe2eForme: "Passé 2e Forme (Conditionnel)",
     }
 
-    const displayTense = dict[tense]
+    const displayedTense = dict[quizzed_tense]
 
-    const conjugationString = quiz.trim();
+    const conjugationString = quizzed_question.trim();
+    
     const space = conjugationString.indexOf(" ")
     const appostrophe = conjugationString.indexOf("'")
     let splitIndex = 0
-
+    
     if(space > 0 && appostrophe > 0){
         splitIndex = Math.min(space,appostrophe)
     }
@@ -42,40 +52,23 @@ function GameShow({infinitif, tense, correct, setCorrect, quiz}){
     else{
         splitIndex = space
     }
-
-
     const subject = conjugationString.slice(0, splitIndex);
+    
+    console.log(subject)
     
     const editor = useEditor({
         extensions: [
           StarterKit,
         ],
-        onUpdate({ editor }){
-            console.log('this is the quiz ' + quiz)
-            const text = editor.getText();
-                let check_str = subject + ' ' + text
-                let check_str_hyph = subject + text
-                if(check_str.trim() ==quiz.trim() || check_str_hyph == quiz){
-                    setCorrect(true)
-                    console.log("success")
-                }
-
-        },
         content: 'Your Answer',
       });
 
 
     return(
         <div id="gameshow-box">
-            <h1>{infinitif} in {displayTense}</h1>
-            <div id="question-box">
-                <div id = "subject">
-                    <h1>{subject}</h1>
-                </div>
+          
                 <EditorContent editor={editor} />
-            </div>
         </div>
     )
-}
-
+    }
 export default GameShow

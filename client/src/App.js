@@ -1,9 +1,8 @@
 import logo from './logo.svg';
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import './App.css';
 import WordCard from './Components/WordCard.js'
 import TenseLibrary from './Components/TenseLibrary';
-import Waiting from './Components/Waiting';
 
 function App() {
   const [cards, setCards] = useState(1)
@@ -21,8 +20,12 @@ function App() {
 
   for (let i = 0; i < cards; i++) {
     flashcards.push(
-      <WordCard wordList = {wordList} setWordList = {setWordList} cards = {cards} setCards = {setCards}/>
+      <WordCard key = {i} wordList = {wordList} setWordList = {setWordList} conjugatin = {conjugatin} cards = {cards} setCards = {setCards}/>
     );
+  }
+
+  function handleClick(){
+    makeTable() 
   }
 
 
@@ -31,6 +34,7 @@ function App() {
     .then(() => setConjugatin(true))
   }
 
+  
 
 
   return (
@@ -38,7 +42,7 @@ function App() {
 
       <h1> French Conjugator </h1>
 
-      {!conjugatin ?<div id="homeBox">
+      <div id="homeBox">
         <div id="wordDisplay">
           {flashcards}
           <button onClick={() => makeNewCard()}>New Word</button>
@@ -49,10 +53,9 @@ function App() {
         </div>
 
       <div id = "conjugateButton">
-        <button onClick={makeTable}>Conjugate!</button>
+        <button onClick={handleClick}>Conjugate!</button>
       </div>
-      </div>:
-      <Waiting wordList={wordList} tenses = {tenses}/>}
+      </div>
     </div>
   );
 }

@@ -17,6 +17,7 @@ def parseConjugations(out):
 
 def finder(inf, conjugation_Array):
     url = "https://french-conjugaison.p.rapidapi.com/conjugate/" + inf
+    print(url)
     response = requests.request("GET", url, headers=headers)
     text = response.text
     jsonText = (json.loads(text))["data"]
@@ -32,7 +33,9 @@ def createwords(word):
     conn = psycopg2.connect(dbname = dbname, user = user, password = password, host = host)
     cursor = conn.cursor()
     cursor.execute(f"SELECT EXISTS ( SELECT * FROM words WHERE infinitif = '{word}')")
-    if cursor.fetchone() != None:
+    res = cursor.fetchone()
+    print(res)
+    if res == (True,):
         cursor.close()
         conn.close()
         return None
@@ -68,7 +71,7 @@ def createwords(word):
         conn.commit()
         cursor.close()
         conn.close()
-
+        
         return json.dumps({'word': word, 'infinitif': value2, 'indicatif_present': value3, 'indicatif_passeSimple': value4, 
                         'indicatif_imparfait': value5, 'indicatif_passeCompose': value6, 'indicatif_futurSimple': value7, 
                         'indicatif_passeAnterieur': value8, 'indicatif_plusQueParfait': value9, 'indicatif_futurAnterieur': value10,

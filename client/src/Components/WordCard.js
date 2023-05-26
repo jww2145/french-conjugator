@@ -1,33 +1,38 @@
-import React, { useState, useEffect } from 'react'
+import React, {useEffect } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Spacer from './Spacer';
 import '../App.css';
 
 
-function WordCard({wordList, setWordList, cards, setCards}){
+function WordCard({wordList, setWordList, cards, conjugatin, setCards}){
+  // Make a new list that is a replica of wordList, except the i-th entry is empty
+  // On Blur, do newList[i] = newWord 
+  // setWordList(newList)
+  
+  let newList = wordList
 
-    let newList = wordList
-    useEffect(() => {
-        function handleTab(e) {
-          if (e.keyCode === 9) {
-            setCards(cards+1)
-          }
+  /*
+  useEffect(() => {
+    function handleTab(e) {
+        if (e.keyCode === 9) {
+          setCards(cards+1)
         }
-    
+      }
         document.addEventListener('keydown', handleTab);
-    
         return () => {
           document.removeEventListener('keydown', handleTab);
         };
     }, []);
+    */
 
     const editor = useEditor({
         extensions: [
           StarterKit,
         ],
         onBlur({ editor }){
-          newList.push(editor.getText())
+          let word = editor.getText()
+          newList.push(word)
           setWordList(newList)
         },
 

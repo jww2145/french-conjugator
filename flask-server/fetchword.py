@@ -8,6 +8,9 @@ def getword(word,col):
     query = ("SELECT infinitif,{col_name} FROM words WHERE infinitif = %s").format(col_name = col)
     cursor.execute(query, (word,))
     results = cursor.fetchone()
+    print(results)
     cursor.close()
     conn.close()
-    return jsonify(results)
+    return jsonify({
+        "result" : results
+    })

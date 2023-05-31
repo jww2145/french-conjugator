@@ -7,7 +7,8 @@ def create():
     cursor=conn.cursor()
     cursor.execute("DROP TABLE IF EXISTS words")
     sql =  """CREATE TABLE words (
-        infinitif text PRIMARY KEY,
+        word_id SERIAL PRIMARY KEY,
+        infinitif text,
         indicatif_present text,
         indicatif_passeSimple text,
         indicatif_imparfait text,

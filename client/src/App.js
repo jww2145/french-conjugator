@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import './App.css';
 import WordCard from './Components/WordCard.js'
 import TenseLibrary from './Components/TenseLibrary';
+import ConjugatingScreen from './Components/ConjugatingScreen';
 
 function App() {
   const [cards, setCards] = useState(1)
@@ -41,8 +42,9 @@ function App() {
     <div className="Home">
 
       <h1> French Conjugator </h1>
-
-      <div id="homeBox">
+    <div>
+      {!conjugatin ? <div id="homeBox">
+        
         <div id="wordDisplay">
           {flashcards}
           <button onClick={() => makeNewCard()}>New Word</button>
@@ -54,9 +56,12 @@ function App() {
 
       <div id = "conjugateButton">
         <button onClick={handleClick}>Conjugate!</button>
-      </div>
-      </div>
+      </div> 
+      </div> : <ConjugatingScreen wordList = {wordList} tenses={tenses}/>}
     </div>
-  );
-}
+
+    </div>
+
+    );
+  }
 export default App;

@@ -4,7 +4,8 @@ import StarterKit from '@tiptap/starter-kit'
 
 
 function GameShow({quiz}){
-    const [correct,setCorrect] = useState(false)
+
+    console.log(quiz)
 
     let randomTense = Math.floor(Math.random() * quiz.length)
     let randomSubject = Math.floor(Math.random() * 6)

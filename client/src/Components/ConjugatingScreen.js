@@ -4,50 +4,45 @@ import GameShow from "./GameShow";
 function ConjugatingScreen({wordList, tenses}){
     //Fetch all of the words and the tenses required and put it in an array? Shuffle this array and pass it to Game Show
 
-    const urls = [] 
-    let quiz_array = []
     const[isReady,setIsReady] = useState(false)
+    const[tableSet, setTableSet] = useState(false)
+    const[quiz, setQuiz] = useState("test")
 
+    if(tableSet == false){
+        let body = ''
+        wordList.forEach(word => {
+            body += word + ','
+        });
 
-    for (let i = 0; i < wordList.length; i++){
-        for (let j = 0; j < tenses.length; j++){
-            quiz_array.push([tenses[j]])
-            urls.push(`http://127.0.0.1:5000/word/${wordList[i]}/${tenses[j]}`)
-        }
-    }
+        let Strbody = body.replace(/,\s*$/, "");
 
-    generateQuiz(urls)
-
-    let counter = 0
-    function generateQuiz(){
-        if(urls.length === 0){
-            setIsReady(true)
-            return Promise.resolve()
-        }
-        const url = urls.shift()
-
-        return fetch(url, {
-            method: 'GET',
+        fetch('http://127.0.0.1:5000/update', {
+            method: 'POST',
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }
+            },
+            body:JSON.stringify({"words": Strbody})
         })
-        .then((response) => response.json())
-        .then((data) => {
-            quiz_array[counter].push(data[0])
-            quiz_array[counter].push(data[1])
-            counter += 1
-            return generateQuiz(urls)})
-        .catch(error => {
-            console.error('Error:', error);
-    });
+        .then(() => setTableSet(true))
+        .then(() => {        
+                let randomWord = wordList[Math.floor(Math.random() * wordList.length)]
+                let randomTense = tenses[Math.floor(Math.random() * tenses.length)]
+                fetch(`http://127.0.0.1:5000/word/${randomWord}/${randomTense}`)
+                .then(response => response.json())
+                .then(data => {let resultArray = data.result; 
+                                const resultString = resultArray[1];
+                                const resultStringArray = resultString.split(", ");
+                                setQuiz(resultStringArray[2]);
+                                console.log(quiz);
+                                console.log(typeof(resultStringArray[3]))})
+            
+            })
     }
     
-    console.log(quiz_array)
-
     return(
         <div>
-           {isReady ? <GameShow quiz = {quiz_array}/> : <p> Waiting . . . </p>}
+           {isReady ? <GameShow game={quiz}/>: <p> Waiting . . . </p>}
         </div>
     )
 }
